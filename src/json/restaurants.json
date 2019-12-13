@@ -1,0 +1,92 @@
+[
+    {
+        "restaurantName": "Bronco",
+        "address": "39 Rue des Petites Écuries, 75010 Paris",
+        "lat": 48.8737815,
+        "long": 2.3501649,
+        "ratings": [{
+                "stars": 4,
+                "comment": "Un excellent restaurant, j'y reviendrai ! Par contre il vaut mieux aimer la viande."
+            },
+            {
+                "stars": 5,
+                "comment": "Tout simplement mon restaurant préféré !"
+            }
+        ]
+    },
+    {
+        "restaurantName": "Babalou",
+        "address": "4 Rue Lamarck, 75018 Paris",
+        "lat": 48.8865035,
+        "long": 2.3442197,
+        "ratings": [{
+                "stars": 5,
+                "comment": "Une minuscule pizzeria délicieuse cachée juste à côté du Sacré choeur !"
+            },
+            {
+                "stars": 3,
+                "comment": "J'ai trouvé ça correct, sans plus"
+            }
+        ]
+    },
+    {
+        "restaurantName": "Le Bois Tordu",
+        "address": "190 Rue d'Auxonne, 21000 Dijon",
+        "lat": 47.305910,
+        "long": 5.059880,
+        "ratings": [{
+                "stars": 2,
+                "comment": "Restaurant à l'ancienne et plat idem."
+            },
+            {
+                "stars": 3,
+                "comment": "Accueil sympathique mais les plats ne sont pas extra, dommage..."
+            }
+        ]
+    },
+    {
+        "restaurantName": "Le Concept",
+        "address": "85 Rue General Fauconnet, 21000 Dijon",
+        "lat": 47.334920,
+        "long": 5.042000,
+        "ratings": [{
+                "stars": 5,
+                "comment": "Nous avons passé un superbe moment au concept. Le personnel est très sympathique, et nous a bien conseillé tout au long du repas."
+            },
+            {
+                "stars": 4,
+                "comment": "La cuisine est simple et bonne. La salle et l'ambiance sont sympa."
+            }
+        ]
+    },
+    {
+        "restaurantName": "Chez Léon",
+        "address": "20 Rue des Godrans, 21000 Dijon",
+        "lat": 47.324690,
+        "long": 5.038890,
+        "ratings": [{
+                "stars": 5,
+                "comment": "Je retrouve ce lieu après + de 12 ans d absence et la magie de ce lieu conviviale agit encore."
+            },
+            {
+                "stars": 4,
+                "comment": "Cuisine traditionnelle savoureuse. J'aurais juste aimé un peu plus de viande dans le bourguignon."
+            }
+        ]
+    },
+    {
+        "restaurantName": "Le Piano Qui Fume",
+        "address": "36 Rue Berbisey, 21000 Dijon",
+        "lat": 47.319000,
+        "long": 5.037330,
+        "ratings": [{
+                "stars": 1,
+                "comment": "Réservation le jeudi pour le samedi à 20:30, arrivée sur place, pas de table, pas de réservation à notre nom, aucune excuse, aucun geste commercial."
+            },
+            {
+                "stars": 5,
+                "comment": "J'ai adoré des entrées aux desserts... Excellent !!! Beaucoup de professionnalisme dans le service."
+            }
+        ]
+    }
+]

@@ -1,20 +1,24 @@
 <template>
   <div id="app">
-    <ListRestaurants></ListRestaurants>
-    <GoogleMaps></GoogleMaps>
+    <ListRestaurants :restaurants=restaurants></ListRestaurants>
+    <GoogleMaps :restaurants=restaurants></GoogleMaps>
   </div>
 </template>
 
 <script>
 import ListRestaurants from './components/ListRestaurants.vue'
 import GoogleMaps from './components/GoogleMaps.vue'
+import jsonRestaurants from './json/restaurants.json'
 
 export default {
   name: 'app',
   components: {
     ListRestaurants,
     GoogleMaps
-  }
+  },
+  data: () => ({
+    restaurants: jsonRestaurants,
+  }) 
 }
 </script>
 

@@ -6,6 +6,12 @@
 var GoogleMapsLoader = require('google-maps');
 export default {
     name: 'GoogleMaps',
+    props: {
+        restaurants: {
+            type: Array,
+            required: false
+        }
+    },
     mounted() {
         // GoogleMapsLoader.KEY = 'my-key';
         GoogleMapsLoader.VERSION = '3.39'
@@ -16,17 +22,24 @@ export default {
                 zoom: 12,
                 center: {lat:48.873781, lng: 2.822075}
             })
-            this.createMarker(google, map, 'red')
+            if(this.restaurants.length !== 0) {
+                this.restaurants.forEach(restaurant => {
+                    let position = {}
+                    position.lat = restaurant.lat
+                    position.lng = restaurant.long
+                    this.createMarker(google, map, position, 'red')
+                });
+            }
         })
     },
     methods: {
-        createMarker(google, map, color) {
+        createMarker(google, map, position, color) {
             let url = "http://maps.google.com/mapfiles/ms/icons/"
             url += color + "-dot.png"
 
             new google.maps.Marker(
                 {
-                    position: {lat:48.873781, lng: 2.822075},
+                    position: position,
                     map: map,
                     icon: {
                         url: url

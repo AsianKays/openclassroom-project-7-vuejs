@@ -18,19 +18,24 @@
 <script>
 // https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
 
-import jsonRestaurants from '../json/restaurants.json'
 import CardRestaurant from './CardRestaurant.vue'
 export default {
     name: "ListRestaurants",
     components: {
         CardRestaurant
     },
+    props: {
+        restaurants: {
+            type: Array,
+            required: true
+        }
+    },
     data: () => ({
         searchedRestaurant: '',
-        restaurants: jsonRestaurants,
-        restaurantsDisplayed: jsonRestaurants
+        restaurantsDisplayed: []
     }),
     mounted() {
+        this.restaurantsDisplayed = this.restaurants
         /* eslint-disable no-console */
         // console.log(this.restaurants)
         /* eslint-enable no-console */

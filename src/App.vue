@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <ListRestaurants></ListRestaurants>
+    <GoogleMaps></GoogleMaps>
   </div>
 </template>
 
 <script>
 import ListRestaurants from './components/ListRestaurants.vue'
+import GoogleMaps from './components/GoogleMaps.vue'
 
 export default {
   name: 'app',
   components: {
-    ListRestaurants
+    ListRestaurants,
+    GoogleMaps
   }
 }
 </script>
@@ -30,6 +33,7 @@ body {
   text-align: center;
   color: #2c3e50;
   height: 100%;
+  display: flex;
 }
 
 </style>

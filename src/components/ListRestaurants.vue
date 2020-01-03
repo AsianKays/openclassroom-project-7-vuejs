@@ -19,6 +19,8 @@
 // https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
 
 import CardRestaurant from './CardRestaurant.vue'
+import {eventBus} from "../main"
+
 export default {
     name: "ListRestaurants",
     components: {
@@ -36,6 +38,7 @@ export default {
     }),
     mounted() {
         this.restaurantsDisplayed = this.restaurants
+        this.test()
         /* eslint-disable no-console */
         // console.log(this.restaurants)
         /* eslint-enable no-console */
@@ -51,6 +54,10 @@ export default {
                 // console.log('')
                 /* eslint-enable no-console */
             }
+            this.test()
+        },
+        test() {
+            eventBus.$emit('gmaplisten', this.restaurantsDisplayed)
         }
     }
 }

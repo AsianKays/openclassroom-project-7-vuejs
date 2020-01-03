@@ -3,37 +3,73 @@
 </template>
 
 <script>
-var GoogleMapsLoader = require('google-maps');
+// https://stackoverflow.com/questions/6219383/google-maps-api-3-check-if-marker-is-in-view
+
+let GoogleMapsLoader = require('google-maps')
+import {eventBus} from "../main"
+
 export default {
     name: 'GoogleMaps',
     props: {
         restaurants: {
             type: Array,
-            required: false
+            required: true
         }
     },
-    async mounted() {
-        // GoogleMapsLoader.KEY = 'my-key';
-        GoogleMapsLoader.VERSION = '3.39'
-        GoogleMapsLoader.REGION = 'fr'
-        let userPosition = await this.getUserLocalisation()
-        GoogleMapsLoader.load((google) => {
-            let map = new google.maps.Map(document.getElementById('google-map'), {
-                zoom: 12,
-                center: userPosition
-            })
-            if(this.restaurants.length !== 0) {
-                this.restaurants.forEach(restaurant => {
-                    let position = {}
-                    position.lat = restaurant.lat
-                    position.lng = restaurant.long
-                    this.createMarker(google, map, position, 'red')
+    data: () => ({
+        restaurantsDisplayed: [],
+        google: Object,
+        map: Object,
+        arrayMarkers: []
+    }),
+    async created() {
+        await this.initGoogleMap()
+
+        eventBus.$on('gmaplisten', (_restaurants) => {
+                /* eslint-disable no-console */
+                console.log(_restaurants)
+                /* eslint-enable no-console */
+            this.hideAllMarkers()
+            this.restaurants.forEach((restaurant, index) => {
+                _restaurants.forEach(_restaurant => {
+                    if(restaurant.restaurantName === _restaurant.restaurantName) {
+                        /* eslint-disable no-console */
+                        console.log(index)
+                        this.setMapOnIndex(this.map, index)
+                        /* eslint-enable no-console */
+                    }
                 });
-            }
-            this.createMarker(google, map, userPosition, 'blue')
+            });
         })
     },
+    mounted() {
+        this.restaurantsDisplayed = this.restaurants
+    },
     methods: {
+        async initGoogleMap() {
+            // GoogleMapsLoader.KEY = 'my-key';
+            GoogleMapsLoader.VERSION = '3.39'
+            GoogleMapsLoader.REGION = 'fr'
+            let userPosition = await this.getUserLocalisation()
+            GoogleMapsLoader.load((google) => {
+                this.google = google
+                this.map = new google.maps.Map(document.getElementById('google-map'), {
+                    zoom: 12,
+                    center: userPosition
+                })
+                this.createAllRestaurantsMarkers()
+                this.createMarker(userPosition, 'blue')
+
+                google.maps.event.addListener(this.map, 'bounds_changed', () => {
+                    this.arrayMarkers.forEach(marker => {
+                        // map.getBounds().contains(marker.getPosition())
+                        /* eslint-disable no-console */
+                        console.log(this.map.getBounds().contains(marker.getPosition()))
+                        /* eslint-enable no-console */
+                    })
+                });
+            })
+        },
         getUserLocalisation() {
             return new Promise(
                 (resolve) => {
@@ -51,19 +87,46 @@ export default {
                 }
             )
         },
-        createMarker(google, map, position, color) {
+        createMarker(position, color) {
             let url = "http://maps.google.com/mapfiles/ms/icons/"
             url += color + "-dot.png"
 
-            new google.maps.Marker(
+            let marker = new this.google.maps.Marker(
                 {
                     position: position,
-                    map: map,
+                    map: this.map,
                     icon: {
                         url: url
                     }
                 }
             )
+            if(color === 'red') {
+                this.arrayMarkers.push(marker)
+            }
+        },
+        createAllRestaurantsMarkers() {
+            if(this.restaurants.length !== 0) {
+                this.restaurants.forEach(restaurant => {
+                    let position = {}
+                    position.lat = restaurant.lat
+                    position.lng = restaurant.long
+                    this.createMarker(position, 'red')
+                })
+            }
+        },
+        setMapOnAll(map) {
+            this.arrayMarkers.forEach(marker => {
+                marker.setMap(map)
+            })
+        },
+        setMapOnIndex(map, index) {
+                /* eslint-disable no-console */
+                console.log(this.arrayMarkers)
+                /* eslint-enable no-console */
+            this.arrayMarkers[index].setMap(map)
+        },
+        hideAllMarkers() {
+            this.setMapOnAll(null)
         }
     }
 }

@@ -7,6 +7,8 @@ import 'vue-material/dist/theme/default.css'
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
 
+export const eventBus = new Vue()
+
 new Vue({
   render: h => h(App),
 }).$mount('#app')

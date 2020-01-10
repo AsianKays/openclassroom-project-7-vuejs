@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <ListRestaurants :restaurants=restaurants></ListRestaurants>
+    <ListRestaurants id="listRestaurants" :restaurants=restaurants></ListRestaurants>
     <GoogleMaps :restaurants=restaurants></GoogleMaps>
   </div>
 </template>
@@ -38,6 +38,10 @@ body {
   color: #2c3e50;
   height: 100%;
   display: flex;
+}
+
+#listRestaurants {
+  width: 40%;
 }
 
 </style>

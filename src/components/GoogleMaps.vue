@@ -22,13 +22,10 @@ export default {
         map: Object,
         arrayMarkers: []
     }),
-    async created() {
+    created: async function() {
         await this.initGoogleMap()
 
         eventBus.$on('restaurantsDisplayed', (_restaurants) => {
-                /* eslint-disable no-console */
-                console.log(_restaurants)
-                /* eslint-enable no-console */
             this.hideAllMarkers()
             this.restaurants.forEach((restaurant, index) => {
                 _restaurants.forEach(_restaurant => {

@@ -9,7 +9,9 @@
             </md-field>
 
             <div v-for="(restaurant, index) in restaurantsDisplayed" :key="index">
-                <CardRestaurant :restaurant=restaurant></CardRestaurant>
+                <keep-alive>
+                    <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
+                </keep-alive>
             </div>
         </div>
     </div>
@@ -37,6 +39,7 @@ export default {
         restaurantsDisplayed: []
     }),
     created: function() {
+        // this.displayedRestaurantsVisible()
         eventBus.$on('markersVisible', (_markersVisible) => {
             let restaurantsVisible = []
             _markersVisible.forEach((index) => {
@@ -45,13 +48,8 @@ export default {
             this.restaurantsDisplayed = restaurantsVisible
         })
     },
-    mounted() {
-        this.restaurantsDisplayed = this.restaurants
-        this.displayedRestaurantsVisible()
-    },
     methods: {
         logSearchedRestaurant() {
-            this.restaurantsDisplayed = this.restaurants
             if(this.searchedRestaurant !== '') {
                 this.restaurantsDisplayed = this.restaurants.filter(restaurant => 
                     restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())

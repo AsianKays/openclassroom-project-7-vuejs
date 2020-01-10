@@ -8,6 +8,7 @@
             <div class="md-subhead">
                 {{ restaurant.address }}
             </div>
+            {{averageStars}}.{{averageStarsDecimal}}
             <icon-star v-for="i in averageStars" :key="i"></icon-star>
             <icon-star v-if="isHalf" format="half"></icon-star>
         </md-card-header-text>
@@ -35,17 +36,34 @@ export default {
     },
     data: () => ({
         averageStars: 0,
-        isHalf: false
+        averageStarsDecimal: 0,
+        isHalf: false,
     }),
-    mounted: function() {
-        let total = 0
-        let ratings = this.restaurant['ratings']
-        ratings.forEach(rate => {
-            total = total + rate.stars
-        });
-        this.averageStars = Math.trunc((total/ratings.length))
-        if((total/ratings.length)%1 !== 0) {
-            this.isHalf = true
+    created: function() {
+        this.setRate()
+    },
+    watch: {
+            restaurant() {
+                this.setRate()
+            }
+    },
+    methods: {
+        setRate() {
+            let total = 0
+            let ratings = this.restaurant['ratings']
+
+            ratings.forEach(rate => {
+                total = total + rate.stars
+            });
+
+            let averageStars = Math.trunc((total/ratings.length))
+            let decimal = (total/ratings.length)%1
+
+            this.averageStars = averageStars
+            if(decimal !== 0) {
+                this.isHalf = true
+                this.averageStarsDecimal = decimal * 10
+            }
         }
     }
 }

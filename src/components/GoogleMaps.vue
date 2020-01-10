@@ -25,7 +25,7 @@ export default {
     async created() {
         await this.initGoogleMap()
 
-        eventBus.$on('gmaplisten', (_restaurants) => {
+        eventBus.$on('restaurantsDisplayed', (_restaurants) => {
                 /* eslint-disable no-console */
                 console.log(_restaurants)
                 /* eslint-enable no-console */
@@ -33,10 +33,7 @@ export default {
             this.restaurants.forEach((restaurant, index) => {
                 _restaurants.forEach(_restaurant => {
                     if(restaurant.restaurantName === _restaurant.restaurantName) {
-                        /* eslint-disable no-console */
-                        console.log(index)
-                        this.setMapOnIndex(this.map, index)
-                        /* eslint-enable no-console */
+                        this.setMapOnIndex(true, index)
                     }
                 });
             });
@@ -60,14 +57,7 @@ export default {
                 this.createAllRestaurantsMarkers()
                 this.createMarker(userPosition, 'blue')
 
-                google.maps.event.addListener(this.map, 'bounds_changed', () => {
-                    this.arrayMarkers.forEach(marker => {
-                        // map.getBounds().contains(marker.getPosition())
-                        /* eslint-disable no-console */
-                        console.log(this.map.getBounds().contains(marker.getPosition()))
-                        /* eslint-enable no-console */
-                    })
-                });
+                this.listenerBounds(google)
             })
         },
         getUserLocalisation() {
@@ -116,17 +106,25 @@ export default {
         },
         setMapOnAll(map) {
             this.arrayMarkers.forEach(marker => {
-                marker.setMap(map)
+                marker.setVisible(map)
             })
         },
         setMapOnIndex(map, index) {
-                /* eslint-disable no-console */
-                console.log(this.arrayMarkers)
-                /* eslint-enable no-console */
-            this.arrayMarkers[index].setMap(map)
+            this.arrayMarkers[index].setVisible(map)
         },
         hideAllMarkers() {
-            this.setMapOnAll(null)
+            this.setMapOnAll(false)
+        },
+        listenerBounds(google) {
+            google.maps.event.addListener(this.map, 'bounds_changed', () => {
+				let markersVisible = []
+				this.arrayMarkers.forEach((marker, index) => {
+					if (this.map.getBounds().contains(marker.getPosition()) && marker.visible) {
+						markersVisible.push(index)
+					}
+				})
+				eventBus.$emit('markersVisible', markersVisible)
+			});
         }
     }
 }

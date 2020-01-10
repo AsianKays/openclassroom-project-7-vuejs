@@ -36,12 +36,18 @@ export default {
         searchedRestaurant: '',
         restaurantsDisplayed: []
     }),
+    created: function() {
+        eventBus.$on('markersVisible', (_markersVisible) => {
+            let restaurantsVisible = []
+            _markersVisible.forEach((index) => {
+                restaurantsVisible.push(this.restaurants[index])
+            })
+            this.restaurantsDisplayed = restaurantsVisible
+        })
+    },
     mounted() {
         this.restaurantsDisplayed = this.restaurants
-        this.test()
-        /* eslint-disable no-console */
-        // console.log(this.restaurants)
-        /* eslint-enable no-console */
+        this.displayedRestaurantsVisible()
     },
     methods: {
         logSearchedRestaurant() {
@@ -50,14 +56,11 @@ export default {
                 this.restaurantsDisplayed = this.restaurants.filter(restaurant => 
                     restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
                 )
-                /* eslint-disable no-console */
-                // console.log('')
-                /* eslint-enable no-console */
             }
-            this.test()
+            this.displayedRestaurantsVisible()
         },
-        test() {
-            eventBus.$emit('gmaplisten', this.restaurantsDisplayed)
+        displayedRestaurantsVisible() {
+            eventBus.$emit('restaurantsDisplayed', this.restaurantsDisplayed)
         }
     }
 }

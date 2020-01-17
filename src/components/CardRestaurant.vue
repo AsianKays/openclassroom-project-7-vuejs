@@ -8,13 +8,12 @@
             <div class="md-subhead">
                 {{ restaurant.address }}
             </div>
-            {{averageStars}}.{{averageStarsDecimal}}
             <icon-star v-for="i in averageStars" :key="i"></icon-star>
             <icon-star v-if="isHalf" format="half"></icon-star>
         </md-card-header-text>
 
         <md-card-media>
-            <img src="https://vuematerial.io/assets/examples/avatar-2.jpg" alt="Avatar">
+            <img :src="image" alt="Avatar">
         </md-card-media>
     </md-card-header>
     </md-card>
@@ -38,6 +37,7 @@ export default {
         averageStars: 0,
         averageStarsDecimal: 0,
         isHalf: false,
+        image: null
     }),
     created: function() {
         this.setRate()
@@ -46,6 +46,9 @@ export default {
             restaurant() {
                 this.setRate()
             }
+    },
+    mounted: function() {
+        // this.image = 'https://maps.googleapis.com/maps/api/streetview?location='+this.restaurant.lat+','+this.restaurant.long+'&size=200x200&key='+process.env.VUE_APP_APIKEY
     },
     methods: {
         setRate() {

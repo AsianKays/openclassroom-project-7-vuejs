@@ -8,6 +8,18 @@
                 <md-input v-model="searchedRestaurant" @input=logSearchedRestaurant></md-input>
             </md-field>
 
+            <md-menu md-size="auto" style="margin-bottom: 10px">
+                <md-chip md-clickable md-menu-trigger>Note <md-icon>keyboard_arrow_down</md-icon></md-chip>
+
+                <md-menu-content>
+                    <md-menu-item v-for="item in starsForFilterOptions" :key="item">
+                        <div>
+                            <icon-star v-for="(star, index) in ' '.repeat(item.nbStars).split('')" :key="index"></icon-star>
+                        </div>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
             <div v-for="(restaurant, index) in restaurantsDisplayed" :key="index">
                 <keep-alive>
                     <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
@@ -22,11 +34,14 @@
 
 import CardRestaurant from './CardRestaurant.vue'
 import {eventBus} from "../main"
+import IconStar from './icons/IconStar.vue'
+
 
 export default {
     name: "ListRestaurants",
     components: {
-        CardRestaurant
+        CardRestaurant,
+        IconStar
     },
     props: {
         restaurants: {
@@ -36,7 +51,21 @@ export default {
     },
     data: () => ({
         searchedRestaurant: '',
-        restaurantsDisplayed: []
+        restaurantsDisplayed: [],
+        starsForFilterOptions: [
+            {
+                nbStars: 2
+            }
+            ,{
+                nbStars: 3
+            }
+            ,{
+                nbStars: 4
+            }
+            ,{
+                nbStars: 5
+            }
+        ]
     }),
     created: function() {
         // this.displayedRestaurantsVisible()
@@ -65,4 +94,10 @@ export default {
 </script>
 
 <style lang="css">
+
+.md-list-item-text * {
+    width: auto !important;
+    margin-right: 15px !important;
+}
+
 </style>

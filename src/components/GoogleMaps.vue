@@ -35,6 +35,9 @@ export default {
                 });
             });
         })
+        eventBus.$on('checkMarkers', () => {
+            this.emitMarkersVisible()
+        })
     },
     mounted() {
         this.restaurantsDisplayed = this.restaurants
@@ -53,7 +56,6 @@ export default {
                 })
                 this.createAllRestaurantsMarkers()
                 this.createMarker(userPosition, 'blue')
-
                 this.listenerBounds(google)
             })
         },
@@ -73,6 +75,9 @@ export default {
                     }
                 }
             )
+        },
+        emitMarkersVisible() {
+            eventBus.$emit('markersVisible', this.checkMarkers())
         },
         createMarker(position, color) {
             let url = "http://maps.google.com/mapfiles/ms/icons/"
@@ -112,15 +117,18 @@ export default {
         hideAllMarkers() {
             this.setMapOnAll(false)
         },
+        checkMarkers() {
+            let markersVisible = []
+            this.arrayMarkers.forEach((marker, index) => {
+                if (this.map.getBounds().contains(marker.getPosition()) && marker.visible) {
+                    markersVisible.push(index)
+                }
+            })
+            return markersVisible
+        },
         listenerBounds(google) {
             google.maps.event.addListener(this.map, 'bounds_changed', () => {
-				let markersVisible = []
-				this.arrayMarkers.forEach((marker, index) => {
-					if (this.map.getBounds().contains(marker.getPosition()) && marker.visible) {
-						markersVisible.push(index)
-					}
-				})
-				eventBus.$emit('markersVisible', markersVisible)
+				this.emitMarkersVisible()
 			});
         }
     }

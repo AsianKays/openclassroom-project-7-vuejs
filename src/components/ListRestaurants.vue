@@ -9,15 +9,18 @@
             </md-field>
 
             <md-menu md-size="auto" style="margin-bottom: 10px">
-                <md-chip class="md-primary chips" md-clickable md-menu-trigger>Note <md-icon>keyboard_arrow_down</md-icon></md-chip>
+                <md-chip class="md-primary chips" md-clickable md-menu-trigger>
+                    {{ displayedRate }}
+                    <md-icon>keyboard_arrow_down</md-icon>
+                </md-chip>
 
                 <md-menu-content>
-                    <md-menu-item class="container-stars">
+                    <md-menu-item @click="test(0)" >
                         <div>
                             Toutes les notes
                         </div>
                     </md-menu-item>
-                    <md-menu-item v-for="(item, index) in starsForFilterOptions" :key="index" class="container-stars">
+                    <md-menu-item @click="setRateFilter(item.nbStars.length)" v-for="(item, index) in starsForFilterOptions" :key="index">
                         <div>
                             <icon-star v-for="(star, index) in item.nbStars" :key="index"></icon-star>
                         </div>
@@ -57,6 +60,7 @@ export default {
     data: () => ({
         searchedRestaurant: '',
         restaurantsDisplayed: [],
+        displayedRate: 'Note',
         starsForFilterOptions: [
             {
                 nbStars: ['*','*']
@@ -93,6 +97,46 @@ export default {
         },
         displayedRestaurantsVisible() {
             eventBus.$emit('restaurantsDisplayed', this.restaurantsDisplayed)
+        },
+        checkMarkers() {
+            eventBus.$emit('checkMarkers')
+        },
+        changeDisplayedRate(rate) {
+            switch(rate) {
+                case 0:
+                    this.displayedRate = 'Note'
+                    break;
+                case 2:
+                    this.displayedRate = '2+'
+                    break;
+                case 3:
+                    this.displayedRate = '3+'
+                    break;
+                case 4:
+                    this.displayedRate = '4+'
+                    break;
+                case 5:
+                    this.displayedRate = '5+'
+                    break;
+            }
+
+        },
+        setRateFilter(rate) {
+            this.restaurantsDisplayed = this.restaurants.filter(restaurant => {
+                let total = 0
+                let ratings = restaurant['ratings']
+
+                ratings.forEach(rate => {
+                    total = total + rate.stars
+                });
+
+                let averageStars = Math.trunc((total/ratings.length))
+
+                return averageStars >= rate
+            })
+            this.changeDisplayedRate(rate)
+            this.displayedRestaurantsVisible()
+            this.checkMarkers()
         }
     }
 }
@@ -119,12 +163,5 @@ export default {
 .md-list-item-text * {
     width: auto !important;
     margin-right: 15px !important;
-}
-
-.container-stars {
-    &:hover{cursor: pointer;
-        border-radius: 50px;
-        background-color: #313131;
-    }
 }
 </style>

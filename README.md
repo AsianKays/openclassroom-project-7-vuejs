@@ -15,3 +15,9 @@ npm install
 ```js
 npm run serve
 ```
+
+## Settings environment variables
+
+```js
+VUE_APP_APIKEY=you_google_maps_api_key
+```

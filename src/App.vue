@@ -22,7 +22,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+@include md-register-theme("default", (
+  primary: #313131, // The primary color of your application
+  accent: md-get-palette-color(white, 500), // The accent or secondary color
+  theme: dark // This can be dark or light
+));
+@import "~vue-material/dist/theme/all"; // Apply the theme
 
 body {
   height: 100vh;
@@ -35,7 +42,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
   height: 100%;
   display: flex;
 }

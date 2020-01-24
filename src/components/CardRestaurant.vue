@@ -13,7 +13,7 @@
         </md-card-header-text>
 
         <md-card-media>
-            <img :src="image" alt="Avatar">
+            <img :src="image" alt="Photo du restaurant">
         </md-card-media>
     </md-card-header>
     </md-card>
@@ -72,5 +72,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss'>
+.test {
+    color: red;
+}
 </style>

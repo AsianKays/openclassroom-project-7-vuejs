@@ -127,7 +127,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #google-map {
     height: 100%;
     width: 100%;

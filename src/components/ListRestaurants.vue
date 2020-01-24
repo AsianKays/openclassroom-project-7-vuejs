@@ -9,12 +9,17 @@
             </md-field>
 
             <md-menu md-size="auto" style="margin-bottom: 10px">
-                <md-chip md-clickable md-menu-trigger>Note <md-icon>keyboard_arrow_down</md-icon></md-chip>
+                <md-chip class="md-primary chips" md-clickable md-menu-trigger>Note <md-icon>keyboard_arrow_down</md-icon></md-chip>
 
                 <md-menu-content>
-                    <md-menu-item v-for="item in starsForFilterOptions" :key="item">
+                    <md-menu-item class="container-stars">
                         <div>
-                            <icon-star v-for="(star, index) in ' '.repeat(item.nbStars).split('')" :key="index"></icon-star>
+                            Toutes les notes
+                        </div>
+                    </md-menu-item>
+                    <md-menu-item v-for="(item, index) in starsForFilterOptions" :key="index" class="container-stars">
+                        <div>
+                            <icon-star v-for="(star, index) in item.nbStars" :key="index"></icon-star>
                         </div>
                     </md-menu-item>
                 </md-menu-content>
@@ -54,16 +59,16 @@ export default {
         restaurantsDisplayed: [],
         starsForFilterOptions: [
             {
-                nbStars: 2
+                nbStars: ['*','*']
             }
             ,{
-                nbStars: 3
+                nbStars: ['*','*','*']
             }
             ,{
-                nbStars: 4
+                nbStars: ['*','*','*','*']
             }
             ,{
-                nbStars: 5
+                nbStars: ['*','*','*','*','*']
             }
         ]
     }),
@@ -93,11 +98,33 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="scss">
+@import "~vue-material/dist/theme/engine"; // Import the theme engine
+@include md-register-theme("default", (
+  primary: md-get-palette-color(green, A200), // The primary color of your application
+  accent: md-get-palette-color(pink, 500), // The accent or secondary color
+  theme: dark // This can be dark or light
+));
+@import "~vue-material/dist/theme/all"; // Apply the theme
+
+.chips{
+    border: 1px solid #fff;
+    &:hover {
+        .md-icon{
+            color: #313131 !important;
+        }
+    }
+}
 
 .md-list-item-text * {
     width: auto !important;
     margin-right: 15px !important;
 }
 
+.container-stars {
+    &:hover{cursor: pointer;
+        border-radius: 50px;
+        background-color: #313131;
+    }
+}
 </style>

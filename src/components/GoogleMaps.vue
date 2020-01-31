@@ -23,9 +23,13 @@ export default {
         arrayMarkers: []
     }),
     created: async function() {
+        /**
+         * When created, it will initialize a Google map
+         */
+        
         await this.initGoogleMap()
 
-        eventBus.$on('restaurantsDisplayed', (_restaurants) => {
+        eventBus.$on('update-restaurants-displayed', (_restaurants) => {
             this.hideAllMarkers()
             this.restaurants.forEach((restaurant, index) => {
                 _restaurants.forEach(_restaurant => {
@@ -35,14 +39,21 @@ export default {
                 });
             });
         })
-        eventBus.$on('checkMarkers', () => {
+        eventBus.$on('check-markers-visibility', () => {
             this.emitMarkersVisible()
         })
     },
     mounted() {
+        /**
+         * Update restaurantsDisplayed with data from prop restaurants (all restaurants from parent)
+         */
         this.restaurantsDisplayed = this.restaurants
     },
     methods: {
+        /**
+         * Create Google map in French, center the vue on user localisation, create a blue marker for the user localisation,
+         * create markers for every restaurants from prop restaurants 
+         */
         async initGoogleMap() {
             // GoogleMapsLoader.KEY = 'my-key';
             GoogleMapsLoader.VERSION = '3.39'
@@ -59,6 +70,10 @@ export default {
                 this.listenerBounds(google)
             })
         },
+
+        /**
+         * Get the user localisation and return it
+         */
         getUserLocalisation() {
             return new Promise(
                 (resolve) => {
@@ -76,9 +91,19 @@ export default {
                 }
             )
         },
+
+        /**
+         * Trigger ListRestaurants.vue and tell it to update data with the current visible markers
+         */
         emitMarkersVisible() {
-            eventBus.$emit('markersVisible', this.checkMarkers())
+            eventBus.$emit('update-visible-markers', this.getVisibleMarkers())
         },
+
+        /**
+         * Create a marker  on the map
+         * @param {Object} position - Contains lat and lng value
+         * @param {String} color - Define the color of the marker
+         */
         createMarker(position, color) {
             let url = "http://maps.google.com/mapfiles/ms/icons/"
             url += color + "-dot.png"
@@ -96,6 +121,10 @@ export default {
                 this.arrayMarkers.push(marker)
             }
         },
+
+        /**
+         * Create all markers for every restaurant in prop restaurants
+         */
         createAllRestaurantsMarkers() {
             if(this.restaurants.length !== 0) {
                 this.restaurants.forEach(restaurant => {
@@ -106,18 +135,44 @@ export default {
                 })
             }
         },
-        setMapOnAll(map) {
+
+        /**
+         * Set all markers into the state of the parameter "boolean"
+         * @param {Boolean} boolean - Determine the property 'visible' state of all the markers (true or false)
+         */
+        setMapOnAll(boolean) {
             this.arrayMarkers.forEach(marker => {
-                marker.setVisible(map)
+                marker.setVisible(boolean)
             })
         },
-        setMapOnIndex(map, index) {
-            this.arrayMarkers[index].setVisible(map)
+
+        /**
+         * Set a specific marker, determined by the index number, to the state of the parameter "boolean"
+         * @param {Boolean} boolean - Determine the property 'visible' state of all the markers (true or false)
+         * @param {Integer} index - Determine the specific marker in the array
+         */
+        setMapOnIndex(boolean, index) {
+            this.arrayMarkers[index].setVisible(boolean)
         },
+
+        /**
+         * Set all markers to visible
+         */
+        showAllMarkers() {
+            this.setMapOnAll(true)
+        },
+
+        /**
+         * Set all markers to hidden
+         */
         hideAllMarkers() {
             this.setMapOnAll(false)
         },
-        checkMarkers() {
+
+        /**
+         * Return an array filled with all visible markers
+         */
+        getVisibleMarkers() {
             let markersVisible = []
             this.arrayMarkers.forEach((marker, index) => {
                 if (this.map.getBounds().contains(marker.getPosition()) && marker.visible) {
@@ -126,6 +181,11 @@ export default {
             })
             return markersVisible
         },
+
+        /**
+         * Triggered if bounds of the map are changing. It will call emitMarkersVisible()
+         * @param {Object} google - Object wich contains all Google properties and functions
+         */
         listenerBounds(google) {
             google.maps.event.addListener(this.map, 'bounds_changed', () => {
 				this.emitMarkersVisible()

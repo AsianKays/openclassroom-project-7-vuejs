@@ -15,7 +15,7 @@
                 </md-chip>
 
                 <md-menu-content>
-                    <md-menu-item @click="test(0)" >
+                    <md-menu-item @click="setRateFilter(0)" >
                         <div>
                             Toutes les notes
                         </div>
@@ -77,8 +77,12 @@ export default {
         ]
     }),
     created: function() {
-        // this.displayedRestaurantsVisible()
-        eventBus.$on('markersVisible', (_markersVisible) => {
+        /**
+         * When created, it have to wait a trigger from GoogleMaps.vue.
+         * It will get an array _markersVisible with all markers visible from the map. 
+         */
+
+        eventBus.$on('update-visible-markers', (_markersVisible) => {
             let restaurantsVisible = []
             _markersVisible.forEach((index) => {
                 restaurantsVisible.push(this.restaurants[index])
@@ -87,40 +91,47 @@ export default {
         })
     },
     methods: {
+        /**
+         * Function for the searchbar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
+         */
         logSearchedRestaurant() {
             if(this.searchedRestaurant !== '') {
-                this.restaurantsDisplayed = this.restaurants.filter(restaurant => 
+                this.restaurantsDisplayed = this.restaurants.filter(restaurant =>
                     restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
                 )
+                this.displayedRestaurantsVisible()
+                this.checkMarkersVisibility()
+                return
             }
+            this.restaurantsDisplayed = this.restaurants
             this.displayedRestaurantsVisible()
+            this.checkMarkersVisibility()
         },
-        displayedRestaurantsVisible() {
-            eventBus.$emit('restaurantsDisplayed', this.restaurantsDisplayed)
-        },
-        checkMarkers() {
-            eventBus.$emit('checkMarkers')
-        },
-        changeDisplayedRate(rate) {
-            switch(rate) {
-                case 0:
-                    this.displayedRate = 'Note'
-                    break;
-                case 2:
-                    this.displayedRate = '2+'
-                    break;
-                case 3:
-                    this.displayedRate = '3+'
-                    break;
-                case 4:
-                    this.displayedRate = '4+'
-                    break;
-                case 5:
-                    this.displayedRate = '5+'
-                    break;
-            }
 
+        /**
+         * Trigger GoogleMaps.vue and tell it to update the visibility of current markers on the map
+         */
+        displayedRestaurantsVisible() {
+            eventBus.$emit('update-restaurants-displayed', this.restaurantsDisplayed)
         },
+
+        /**
+         * Trigger GoogleMaps.vue for asking to the component to return all current markers visible
+         */
+        checkMarkersVisibility() {
+            eventBus.$emit('check-markers-visibility')
+        },
+
+        /**
+         * Update displayedRate to match with the current rate filter
+         */
+        changeDisplayedRate(rate) {
+            rate !== 0 ? this.displayedRate = `${rate}+` : this.displayedRate = 'Note'
+        },
+
+        /**
+         * Filter restaurantsDisplayed by the average rate
+         */
         setRateFilter(rate) {
             this.restaurantsDisplayed = this.restaurants.filter(restaurant => {
                 let total = 0
@@ -136,32 +147,32 @@ export default {
             })
             this.changeDisplayedRate(rate)
             this.displayedRestaurantsVisible()
-            this.checkMarkers()
+            this.checkMarkersVisibility()
         }
     }
 }
 </script>
 
 <style lang="scss">
-@import "~vue-material/dist/theme/engine"; // Import the theme engine
-@include md-register-theme("default", (
-  primary: md-get-palette-color(green, A200), // The primary color of your application
-  accent: md-get-palette-color(pink, 500), // The accent or secondary color
-  theme: dark // This can be dark or light
-));
-@import "~vue-material/dist/theme/all"; // Apply the theme
+    @import "~vue-material/dist/theme/engine"; // Import the theme engine
+    @include md-register-theme("default", (
+    primary: md-get-palette-color(green, A200), // The primary color of your application
+    accent: md-get-palette-color(pink, 500), // The accent or secondary color
+    theme: dark // This can be dark or light
+    ));
+    @import "~vue-material/dist/theme/all"; // Apply the theme
 
-.chips{
-    border: 1px solid #fff;
-    &:hover {
-        .md-icon{
-            color: #313131 !important;
+    .chips{
+        border: 1px solid #fff;
+        &:hover {
+            .md-icon{
+                color: #313131 !important;
+            }
         }
     }
-}
 
-.md-list-item-text * {
-    width: auto !important;
-    margin-right: 15px !important;
-}
+    .md-list-item-text * {
+        width: auto !important;
+        margin-right: 15px !important;
+    }
 </style>

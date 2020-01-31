@@ -8,7 +8,7 @@
             <div class="md-subhead">
                 {{ restaurant.address }}
             </div>
-            <icon-star v-for="i in averageStars" :key="i"></icon-star>
+            <icon-star v-for="i in averageRate" :key="i"></icon-star>
             <icon-star v-if="isHalf" format="half"></icon-star>
         </md-card-header-text>
 
@@ -34,23 +34,26 @@ export default {
         }
     },
     data: () => ({
-        averageStars: 0,
-        averageStarsDecimal: 0,
+        averageRate: 0,
+        averageRateDecimal: 0,
         isHalf: false,
         image: null
     }),
-    created: function() {
-        this.setRate()
-    },
     watch: {
-            restaurant() {
-                this.setRate()
+            restaurant: {
+                immediate: true,
+                handler() {
+                    this.setRate()
+                }
             }
     },
     mounted: function() {
         // this.image = 'https://maps.googleapis.com/maps/api/streetview?location='+this.restaurant.lat+','+this.restaurant.long+'&size=200x200&key='+process.env.VUE_APP_APIKEY
     },
     methods: {
+        /**
+         * Set the average rate of the restaurant
+         */
         setRate() {
             let total = 0
             let ratings = this.restaurant['ratings']
@@ -59,13 +62,13 @@ export default {
                 total = total + rate.stars
             });
 
-            let averageStars = Math.trunc((total/ratings.length))
+            let averageRate = Math.trunc((total/ratings.length))
             let decimal = (total/ratings.length)%1
 
-            this.averageStars = averageStars
+            this.averageRate = averageRate
             if(decimal !== 0) {
                 this.isHalf = true
-                this.averageStarsDecimal = decimal * 10
+                this.averageRateDecimal = decimal * 10
             }
         }
     }
@@ -73,7 +76,5 @@ export default {
 </script>
 
 <style lang='scss'>
-.test {
-    color: red;
-}
+
 </style>

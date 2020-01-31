@@ -61,6 +61,7 @@ export default {
         searchedRestaurant: '',
         restaurantsDisplayed: [],
         displayedRate: 'Note',
+        filteredRate: 0,
         starsForFilterOptions: [
             {
                 nbStars: ['*','*']
@@ -96,12 +97,22 @@ export default {
          */
         logSearchedRestaurant() {
             if(this.searchedRestaurant !== '') {
-                this.restaurantsDisplayed = this.restaurants.filter(restaurant =>
-                    restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
-                )
-                this.displayedRestaurantsVisible()
-                this.checkMarkersVisibility()
-                return
+                if(this.filteredRate === 0) {
+                    this.restaurantsDisplayed = this.restaurants.filter(restaurant =>
+                        restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
+                    )
+                    this.displayedRestaurantsVisible()
+                    this.checkMarkersVisibility()
+                    return
+                }
+                if(this.filteredRate > 0) {
+                    this.restaurantsDisplayed = this.restaurantsDisplayed.filter(restaurant =>
+                        restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
+                    )
+                    this.displayedRestaurantsVisible()
+                    this.checkMarkersVisibility()
+                    return
+                }
             }
             this.restaurantsDisplayed = this.restaurants
             this.displayedRestaurantsVisible()
@@ -133,6 +144,7 @@ export default {
          * Filter restaurantsDisplayed by the average rate
          */
         setRateFilter(rate) {
+            this.filteredRate = rate
             this.restaurantsDisplayed = this.restaurants.filter(restaurant => {
                 let total = 0
                 let ratings = restaurant['ratings']

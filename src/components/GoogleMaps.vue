@@ -184,7 +184,7 @@ export default {
 
         /**
          * Triggered if bounds of the map are changing. It will call emitMarkersVisible()
-         * @param {Object} google - Object wich contains all Google properties and functions
+         * @param {Object} google - Object which contains all Google properties and functions
          */
         listenerBounds(google) {
             google.maps.event.addListener(this.map, 'bounds_changed', () => {

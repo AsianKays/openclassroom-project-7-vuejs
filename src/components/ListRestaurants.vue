@@ -82,7 +82,6 @@ export default {
          * When created, it have to wait a trigger from GoogleMaps.vue.
          * It will get an array _markersVisible with all markers visible from the map. 
          */
-
         eventBus.$on('update-visible-markers', (_markersVisible) => {
             let restaurantsVisible = []
             _markersVisible.forEach((index) => {
@@ -92,31 +91,18 @@ export default {
         })
     },
     methods: {
+        
         /**
-         * Function for the searchbar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
+         * Function semi generic for filter an array which includes the string given in third parameter
+         * This value is searched in the field, given in the second paramter, of the element
+         * @param {Array} arrayToFilter - Array to filter
+         * @param {String} field - Key of the object
+         * @param {String} searchedValue - Value we are looking for
          */
-        logSearchedRestaurant() {
-            if(this.searchedRestaurant !== '') {
-                if(this.filteredRate === 0) {
-                    this.restaurantsDisplayed = this.restaurants.filter(restaurant =>
-                        restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
-                    )
-                    this.displayedRestaurantsVisible()
-                    this.checkMarkersVisibility()
-                    return
-                }
-                if(this.filteredRate > 0) {
-                    this.restaurantsDisplayed = this.restaurantsDisplayed.filter(restaurant =>
-                        restaurant['restaurantName'].toLowerCase().includes(this.searchedRestaurant.toLowerCase())
-                    )
-                    this.displayedRestaurantsVisible()
-                    this.checkMarkersVisibility()
-                    return
-                }
-            }
-            this.restaurantsDisplayed = this.restaurants
-            this.displayedRestaurantsVisible()
-            this.checkMarkersVisibility()
+        filterGivenArray(arrayToFilter, field, searchedValue) {
+            this.restaurantsDisplayed = arrayToFilter.filter(restaurant =>
+                restaurant[field].toLowerCase().includes(searchedValue.toLowerCase())
+            )
         },
 
         /**
@@ -145,6 +131,7 @@ export default {
          */
         setRateFilter(rate) {
             this.filteredRate = rate
+
             this.restaurantsDisplayed = this.restaurants.filter(restaurant => {
                 let total = 0
                 let ratings = restaurant['ratings']
@@ -157,10 +144,39 @@ export default {
 
                 return averageStars >= rate
             })
+
             this.changeDisplayedRate(rate)
             this.displayedRestaurantsVisible()
             this.checkMarkersVisibility()
-        }
+        },
+
+        /**
+         * Function for the searchbar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
+         */
+        logSearchedRestaurant() {
+            if(this.searchedRestaurant !== '') {
+                if(this.filteredRate === 0) {
+                    this.filterGivenArray(this.restaurants, 'restaurantName', this.searchedRestaurant)
+                    this.displayedRestaurantsVisible()
+                    this.checkMarkersVisibility()
+                    return
+                }
+                if(this.filteredRate > 0) {
+                    this.filterGivenArray(this.restaurants, 'restaurantName', this.searchedRestaurant)
+                    this.displayedRestaurantsVisible()
+                    this.checkMarkersVisibility()
+                    return
+                }
+            }
+
+            if(this.filteredRate === 0) {
+                this.restaurantsDisplayed = this.restaurants
+                this.displayedRestaurantsVisible()
+                this.checkMarkersVisibility()
+            }
+            else this.setRateFilter(this.filteredRate)
+
+        },
     }
 }
 </script>

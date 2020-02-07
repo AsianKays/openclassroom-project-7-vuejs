@@ -128,11 +128,12 @@ export default {
 
         /**
          * Filter restaurantsDisplayed by the average rate
+         * @param {Number} rate - Rate chosen for the filter
          */
         setRateFilter(rate) {
             this.filteredRate = rate
 
-            this.restaurantsDisplayed = this.restaurants.filter(restaurant => {
+            let restaurantsFromRateFilter = this.restaurants.filter(restaurant => {
                 let total = 0
                 let ratings = restaurant['ratings']
 
@@ -144,6 +145,9 @@ export default {
 
                 return averageStars >= rate
             })
+
+            if(this.searchedRestaurant !== '') this.filterGivenArray(restaurantsFromRateFilter, 'restaurantName', this.searchedRestaurant)
+            else this.restaurantsDisplayed = restaurantsFromRateFilter
 
             this.changeDisplayedRate(rate)
             this.displayedRestaurantsVisible()
@@ -162,7 +166,8 @@ export default {
                     return
                 }
                 if(this.filteredRate > 0) {
-                    this.filterGivenArray(this.restaurants, 'restaurantName', this.searchedRestaurant)
+                    this.setRateFilter(this.filteredRate)
+                    this.filterGivenArray(this.restaurantsDisplayed, 'restaurantName', this.searchedRestaurant)
                     this.displayedRestaurantsVisible()
                     this.checkMarkersVisibility()
                     return

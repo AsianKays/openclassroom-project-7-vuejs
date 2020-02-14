@@ -8,7 +8,7 @@
       <div class="md-list-item-text">
         <span>Utilisateur anonyme</span>
         <div>
-          <icon-star v-for="i in review.stars" :key="i" style="margin: 5px 0 !important;"></icon-star>
+          <icon-star v-for="i in review.stars" :key="i"></icon-star>
         </div>
         <p>{{ review.comment }}</p>
       </div>
@@ -33,6 +33,8 @@
   }
 </script>
 
-<style lang="scss">
-
+<style scoped lang="scss">
+  .md-list-item-text * {
+    width: auto !important;
+  }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="md-layout">
     <div class="md-layout-item">
-      <h1>Restaurants</h1>
-
+      <h1>Geeglo Places</h1>
+      <md-divider></md-divider>
       <md-field>
         <label>Rechercher un restaurant</label>
         <md-input v-model="searchedRestaurant" @input=logSearchedRestaurant></md-input>
@@ -183,13 +183,14 @@
   }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
   .chips{
     border: 1px solid #fff;
     color: #fff !important;
     &:hover {
+      color: #42b883 !important;
       .md-icon{
-        color: #fff !important;
+        color: #42b883 !important;
       }
     }
   }

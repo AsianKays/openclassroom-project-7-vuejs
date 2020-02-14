@@ -84,7 +84,7 @@
     }
 </script>
 
-<style lang='scss'>
+<style scoped lang='scss'>
   .hover:hover {
     cursor: pointer;
     background-color: #42b883;

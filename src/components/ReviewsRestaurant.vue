@@ -1,6 +1,11 @@
 <template>
   <md-dialog id="dialog" :md-active.sync="showDialog" @md-closed="closeDialog">
     <md-dialog-title>Commentaires</md-dialog-title>
+    <md-divider></md-divider>
+    <md-chip class="md-primary chips" md-clickable>
+      <md-icon>rate_review</md-icon>
+      Rédiger un avis
+    </md-chip>
 
     <Review v-for="(review, index) in reviews" :key="index" :review="review"></Review>
 
@@ -52,8 +57,21 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   #dialog {
     overflow-y: auto;
+  }
+
+  .chips{
+    border: 1px solid #fff;
+    color: #fff !important;
+    width: fit-content;
+    margin: 16px 0 0 16px;
+    &:hover {
+      color: #42b883 !important;
+      .md-icon{
+        color: #42b883 !important;
+      }
+    }
   }
 </style>

@@ -196,7 +196,7 @@
   }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
   #google-map {
     height: 100%;
     width: 100%;

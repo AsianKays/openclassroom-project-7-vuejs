@@ -1,211 +1,208 @@
 <template>
-    <div class="md-layout">
-        <div class="md-layout-item">
-            <h1>Restaurants</h1>
+  <div class="md-layout">
+    <div class="md-layout-item">
+      <h1>Restaurants</h1>
 
-            <md-field>
-                <label>Rechercher un restaurant</label>
-                <md-input v-model="searchedRestaurant" @input=logSearchedRestaurant></md-input>
-            </md-field>
+      <md-field>
+        <label>Rechercher un restaurant</label>
+        <md-input v-model="searchedRestaurant" @input=logSearchedRestaurant></md-input>
+      </md-field>
 
-            <md-menu md-size="auto" style="margin-bottom: 10px">
-                <md-chip class="md-primary chips" md-clickable md-menu-trigger>
-                    {{ displayedRate }}
-                    <md-icon>keyboard_arrow_down</md-icon>
-                </md-chip>
+      <md-menu md-size="auto" style="margin-bottom: 10px">
+        <md-chip class="md-primary chips" md-clickable md-menu-trigger>
+          {{ displayedRate }}
+          <md-icon>keyboard_arrow_down</md-icon>
+        </md-chip>
 
-                <md-menu-content>
-                    <md-menu-item @click="setRateFilter(0)" >
-                        <div>
-                            Toutes les notes
-                        </div>
-                    </md-menu-item>
-                    <md-menu-item @click="setRateFilter(item.nbStars.length)" v-for="(item, index) in starsForFilterOptions" :key="index">
-                        <div>
-                            <icon-star v-for="(star, index) in item.nbStars" :key="index"></icon-star>
-                        </div>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-
-            <div v-for="(restaurant, index) in restaurantsDisplayed" :key="index">
-                <keep-alive>
-                    <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
-                </keep-alive>
+        <md-menu-content>
+          <md-menu-item @click="setRateFilter(0)" >
+            <div>
+              Toutes les notes
             </div>
-        </div>
+          </md-menu-item>
+          <md-menu-item @click="setRateFilter(item.nbStars.length)" v-for="(item, index) in starsForFilterOptions" :key="index">
+            <div>
+              <icon-star v-for="(star, index) in item.nbStars" :key="index">{{star}}</icon-star>
+            </div>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+
+      <div v-for="(restaurant, index) in restaurantsDisplayed" :key="index">
+        <keep-alive>
+          <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
+        </keep-alive>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-// https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
+  // https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
 
-import CardRestaurant from './CardRestaurant.vue'
-import {eventBus} from "../main"
-import IconStar from './icons/IconStar.vue'
+  import CardRestaurant from './CardRestaurant.vue';
+  import {eventBus} from "../main";
+  import IconStar from './icons/IconStar.vue';
 
-
-export default {
+  export default {
     name: "ListRestaurants",
     components: {
-        CardRestaurant,
-        IconStar
+      CardRestaurant,
+      IconStar
     },
     props: {
-        restaurants: {
-            type: Array,
-            required: true
-        }
+      restaurants: {
+        type: Array,
+        required: true
+      }
     },
     data: () => ({
-        searchedRestaurant: '',
-        restaurantsDisplayed: [],
-        displayedRate: 'Note',
-        filteredRate: 0,
-        starsForFilterOptions: [
-            {
-                nbStars: ['*','*']
-            }
-            ,{
-                nbStars: ['*','*','*']
-            }
-            ,{
-                nbStars: ['*','*','*','*']
-            }
-            ,{
-                nbStars: ['*','*','*','*','*']
-            }
-        ]
+      searchedRestaurant: '',
+      restaurantsDisplayed: [],
+      displayedRate: 'Note',
+      filteredRate: 0,
+      starsForFilterOptions: [
+        {
+          nbStars: ['*','*']
+        }
+        ,{
+          nbStars: ['*','*','*']
+        }
+        ,{
+          nbStars: ['*','*','*','*']
+        }
+        ,{
+          nbStars: ['*','*','*','*','*']
+        }
+      ]
     }),
     created: function() {
-        /**
-         * When created, it have to wait a trigger from GoogleMaps.vue.
-         * It will get an array _markersVisible with all markers visible from the map. 
-         */
-        eventBus.$on('update-visible-markers', (_markersVisible) => {
-            let restaurantsVisible = []
-            _markersVisible.forEach((index) => {
-                restaurantsVisible.push(this.restaurants[index])
-            })
-            this.restaurantsDisplayed = restaurantsVisible
-        })
+      /**
+       * When created, it have to wait a trigger from GoogleMaps.vue.
+       * It will get an array _markersVisible with all markers visible from the map.
+       */
+      eventBus.$on('update-visible-markers', (_markersVisible) => {
+        let restaurantsVisible = [];
+        _markersVisible.forEach((index) => {
+          restaurantsVisible.push(this.restaurants[index])
+        });
+        this.restaurantsDisplayed = restaurantsVisible;
+      })
     },
     methods: {
-        
-        /**
-         * Function semi generic for filter an array which includes the string given in third parameter
-         * This value is searched in the field, given in the second paramter, of the element
-         * @param {Array} arrayToFilter - Array to filter
-         * @param {String} field - Key of the object
-         * @param {String} searchedValue - Value we are looking for
-         */
-        filterGivenArray(arrayToFilter, field, searchedValue) {
-            this.restaurantsDisplayed = arrayToFilter.filter(restaurant =>
-                restaurant[field].toLowerCase().includes(searchedValue.toLowerCase())
-            )
-        },
 
-        /**
-         * Trigger GoogleMaps.vue and tell it to update the visibility of current markers on the map
-         */
-        displayedRestaurantsVisible() {
-            eventBus.$emit('update-restaurants-displayed', this.restaurantsDisplayed)
-        },
+      /**
+       * Function semi generic for filter an array which includes the string given in third parameter
+       * This value is searched in the field, given in the second paramter, of the element
+       * @param {Array} arrayToFilter - Array to filter
+       * @param {String} field - Key of the object
+       * @param {String} searchedValue - Value we are looking for
+       */
+      filterGivenArray(arrayToFilter, field, searchedValue) {
+        this.restaurantsDisplayed = arrayToFilter.filter(restaurant =>
+          restaurant[field].toLowerCase().includes(searchedValue.toLowerCase())
+        );
+      },
 
-        /**
-         * Trigger GoogleMaps.vue for asking to the component to return all current markers visible
-         */
-        checkMarkersVisibility() {
-            eventBus.$emit('check-markers-visibility')
-        },
+      /**
+       * Trigger GoogleMaps.vue and tell it to update the visibility of current markers on the map
+       */
+      displayedRestaurantsVisible() {
+        eventBus.$emit('update-restaurants-displayed', this.restaurantsDisplayed);
+      },
 
-        /**
-         * Update displayedRate to match with the current rate filter
-         */
-        changeDisplayedRate(rate) {
-            rate !== 0 ? this.displayedRate = `${rate}+` : this.displayedRate = 'Note'
-        },
+      /**
+       * Trigger GoogleMaps.vue for asking to the component to return all current markers visible
+       */
+      checkMarkersVisibility() {
+        eventBus.$emit('check-markers-visibility');
+      },
 
-        /**
-         * Filter restaurantsDisplayed by the average rate
-         * @param {Number} rate - Rate chosen for the filter
-         */
-        setRateFilter(rate) {
-            this.filteredRate = rate
+      /**
+       * Update displayedRate to match with the current rate filter
+       */
+      changeDisplayedRate(rate) {
+        rate !== 0 ? this.displayedRate = `${rate}+` : this.displayedRate = 'Note';
+      },
 
-            let restaurantsFromRateFilter = this.restaurants.filter(restaurant => {
-                let total = 0
-                let ratings = restaurant['ratings']
+      /**
+       * Filter restaurantsDisplayed by the average rate
+       * @param {Number} rate - Rate chosen for the filter
+       */
+      setRateFilter(rate) {
+        this.filteredRate = rate;
 
-                ratings.forEach(rate => {
-                    total = total + rate.stars
-                });
+        const restaurantsFromRateFilter = this.restaurants.filter(restaurant => {
+          let total = 0;
+          const ratings = restaurant['ratings'];
 
-                let averageStars = Math.trunc((total/ratings.length))
+          ratings.forEach(rate => {
+            total = total + rate.stars;
+          });
 
-                return averageStars >= rate
-            })
+          const averageStars = Math.trunc((total/ratings.length));
+          return averageStars >= rate;
+        });
 
-            if(this.searchedRestaurant !== '') this.filterGivenArray(restaurantsFromRateFilter, 'restaurantName', this.searchedRestaurant)
-            else this.restaurantsDisplayed = restaurantsFromRateFilter
+        if (this.searchedRestaurant !== '') {
+          this.filterGivenArray(restaurantsFromRateFilter, 'restaurantName', this.searchedRestaurant);
+        } else { this.restaurantsDisplayed = restaurantsFromRateFilter; }
 
-            this.changeDisplayedRate(rate)
-            this.displayedRestaurantsVisible()
-            this.checkMarkersVisibility()
-        },
+        this.changeDisplayedRate(rate);
+        this.displayedRestaurantsVisible();
+        this.checkMarkersVisibility();
+      },
 
-        /**
-         * Function for the searchbar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
-         */
-        logSearchedRestaurant() {
-            if(this.searchedRestaurant !== '') {
-                if(this.filteredRate === 0) {
-                    this.filterGivenArray(this.restaurants, 'restaurantName', this.searchedRestaurant)
-                    this.displayedRestaurantsVisible()
-                    this.checkMarkersVisibility()
-                    return
-                }
-                if(this.filteredRate > 0) {
-                    this.setRateFilter(this.filteredRate)
-                    this.filterGivenArray(this.restaurantsDisplayed, 'restaurantName', this.searchedRestaurant)
-                    this.displayedRestaurantsVisible()
-                    this.checkMarkersVisibility()
-                    return
-                }
-            }
+      /**
+       * Function for the searchbar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
+       */
+      logSearchedRestaurant() {
+        if (this.searchedRestaurant !== '') {
+          if (this.filteredRate === 0) {
+            this.filterGivenArray(this.restaurants, 'restaurantName', this.searchedRestaurant);
+            this.displayedRestaurantsVisible();
+            this.checkMarkersVisibility();
+            return
+          }
+          if (this.filteredRate > 0) {
+            this.setRateFilter(this.filteredRate);
+            this.filterGivenArray(this.restaurantsDisplayed, 'restaurantName', this.searchedRestaurant);
+            this.displayedRestaurantsVisible();
+            this.checkMarkersVisibility();
+            return
+          }
+        }
 
-            if(this.filteredRate === 0) {
-                this.restaurantsDisplayed = this.restaurants
-                this.displayedRestaurantsVisible()
-                this.checkMarkersVisibility()
-            }
-            else this.setRateFilter(this.filteredRate)
-
-        },
+        if (this.filteredRate === 0) {
+          this.restaurantsDisplayed = this.restaurants;
+          this.displayedRestaurantsVisible();
+          this.checkMarkersVisibility();
+        } else { this.setRateFilter(this.filteredRate); }
+      }
     }
-}
+  }
 </script>
 
 <style lang="scss">
-    @import "~vue-material/dist/theme/engine"; // Import the theme engine
-    @include md-register-theme("default", (
-    primary: md-get-palette-color(green, A200), // The primary color of your application
-    accent: md-get-palette-color(pink, 500), // The accent or secondary color
-    theme: dark // This can be dark or light
-    ));
-    @import "~vue-material/dist/theme/all"; // Apply the theme
+  @import "~vue-material/dist/theme/engine"; // Import the theme engine
+  @include md-register-theme("default", (
+      primary: md-get-palette-color(green, A200), // The primary color of your application
+      accent: md-get-palette-color(pink, 500), // The accent or secondary color
+      theme: dark // This can be dark or light
+  ));
+  @import "~vue-material/dist/theme/all"; // Apply the theme
 
-    .chips{
-        border: 1px solid #fff;
-        &:hover {
-            .md-icon{
-                color: #313131 !important;
-            }
-        }
+  .chips{
+    border: 1px solid #fff;
+    &:hover {
+      .md-icon{
+        color: #313131 !important;
+      }
     }
+  }
 
-    .md-list-item-text * {
-        width: auto !important;
-        margin-right: 15px !important;
-    }
+  .md-list-item-text * {
+    width: auto !important;
+    margin-right: 15px !important;
+  }
 </style>

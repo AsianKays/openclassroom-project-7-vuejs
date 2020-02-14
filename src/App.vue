@@ -6,9 +6,9 @@
 </template>
 
 <script>
-import ListRestaurants from './components/ListRestaurants.vue'
-import GoogleMaps from './components/GoogleMaps.vue'
-import jsonRestaurants from './json/restaurants.json'
+import ListRestaurants from './components/ListRestaurants.vue';
+import GoogleMaps from './components/GoogleMaps.vue';
+import jsonRestaurants from './json/restaurants.json';
 
 export default {
   name: 'app',

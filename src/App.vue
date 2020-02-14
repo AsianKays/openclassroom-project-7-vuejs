@@ -25,8 +25,9 @@ export default {
 <style lang="scss">
 @import "~vue-material/dist/theme/engine"; // Import the theme engine
 @include md-register-theme("default", (
-  primary: #313131, // The primary color of your application
-  accent: md-get-palette-color(white, 500), // The accent or secondary color
+  primary: #42b883, // The primary color of your application
+  // accent: md-get-palette-color(white, 500), // The accent or secondary color
+  accent: #35495e, // The accent or secondary color
   theme: dark // This can be dark or light
 ));
 @import "~vue-material/dist/theme/all"; // Apply the theme

@@ -3,12 +3,11 @@ import App from './App.vue'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 
+Vue.config.productionTip = false;
+Vue.use(VueMaterial);
 
-Vue.config.productionTip = false
-Vue.use(VueMaterial)
-
-export const eventBus = new Vue()
+export const eventBus = new Vue();
 
 new Vue({
   render: h => h(App),
-}).$mount('#app')
+}).$mount('#app');

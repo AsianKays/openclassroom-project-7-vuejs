@@ -1,31 +1,36 @@
 <template>
-  <md-card class="md-primary" md-theme="black-card">
-    <md-card-header>
-      <md-card-header-text>
-        <div class="md-title">
-          {{ restaurant.restaurantName }}
-        </div>
-        <div class="md-subhead">
-          {{ restaurant.address }}
-        </div>
-        <icon-star v-for="i in averageRate" :key="i"></icon-star>
-        <icon-star v-if="isHalf" format="half"></icon-star>
-      </md-card-header-text>
+  <div class="hover" @click="updateStateReviews(true)">
+    <md-card class="md-primary" md-theme="black-card">
+        <md-card-header>
+          <md-card-header-text>
+              <div class="md-title">
+                {{ restaurant.restaurantName }}
+              </div>
+              <div class="md-subhead">
+                {{ restaurant.address }}
+              </div>
+              <icon-star v-for="i in averageRate" :key="i"></icon-star>
+              <icon-star v-if="isHalf" format="half"></icon-star>
+          </md-card-header-text>
 
-      <md-card-media>
-        <img :src="image" alt="Photo du restaurant">
-      </md-card-media>
-    </md-card-header>
-  </md-card>
+          <md-card-media>
+            <img :src="image" alt="Photo du restaurant">
+          </md-card-media>
+        </md-card-header>
+    </md-card>
+    <ReviewsRestaurant :state="state" :reviews="restaurant.ratings" @closed="updateStateReviews"></ReviewsRestaurant>
+  </div>
 </template>
 
 <script>
   import IconStar from './icons/IconStar.vue';
+  import ReviewsRestaurant from './ReviewsRestaurant.vue';
 
     export default {
       name: 'CardRestaurant',
       components: {
-        IconStar
+        IconStar,
+        ReviewsRestaurant
       },
       props: {
         restaurant: {
@@ -37,7 +42,8 @@
         averageRate: 0,
         averageRateDecimal: 0,
         isHalf: false,
-        image: ''
+        image: '',
+        state: false
       }),
       watch: {
         restaurant: {
@@ -69,11 +75,18 @@
             this.isHalf = true;
             this.averageRateDecimal = decimal * 10;
           }
+        },
+
+        updateStateReviews(state) {
+          this.state = state
         }
       }
     }
 </script>
 
 <style lang='scss'>
-
+  .hover:hover {
+    cursor: pointer;
+    background-color: #42b883;
+  }
 </style>

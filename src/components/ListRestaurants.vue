@@ -41,7 +41,7 @@
   // https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
 
   import CardRestaurant from './CardRestaurant.vue';
-  import {eventBus} from "../main";
+  import { eventBus } from "../main";
   import IconStar from './icons/IconStar.vue';
 
   export default {
@@ -184,19 +184,12 @@
 </script>
 
 <style lang="scss">
-  @import "~vue-material/dist/theme/engine"; // Import the theme engine
-  @include md-register-theme("default", (
-      primary: md-get-palette-color(green, A200), // The primary color of your application
-      accent: md-get-palette-color(pink, 500), // The accent or secondary color
-      theme: dark // This can be dark or light
-  ));
-  @import "~vue-material/dist/theme/all"; // Apply the theme
-
   .chips{
     border: 1px solid #fff;
+    color: #fff !important;
     &:hover {
       .md-icon{
-        color: #313131 !important;
+        color: #fff !important;
       }
     }
   }

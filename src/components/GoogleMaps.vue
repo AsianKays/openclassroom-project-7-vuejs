@@ -1,14 +1,21 @@
 <template>
-  <div id="google-map"></div>
+  <div style="height: 100%; width: 100%;">
+    <div id="google-map"></div>
+    <FormRestaurant restaurantName="Test" address="test" state="true"></FormRestaurant>
+  </div>
 </template>
 
 <script>
   // https://stackoverflow.com/questions/6219383/google-maps-api-3-check-if-marker-is-in-view
   const GoogleMapsLoader = require('google-maps');
   import { eventBus } from "../main";
+  import FormRestaurant from "./FormRestaurant";
 
   export default {
     name: 'GoogleMaps',
+    components: {
+      FormRestaurant
+    },
     props: {
       restaurants: {
         type: Array,
@@ -200,13 +207,12 @@
        */
       listenerClick(google) {
         let geocoder = google.maps.Geocoder;
-        console.log(geocoder);
         google.maps.event.addListener(this.map, 'click', (e) => {
           geocoder.prototype.geocode({
             latLng: e.latLng
           }, (results, status) => {
             if (status === google.maps.GeocoderStatus.OK) {
-              if (results[0]) { console.log(results[0].formatted_address) }
+              if (results[0]) { console.log(results[0].formatted_address); }
             }
           })
         });

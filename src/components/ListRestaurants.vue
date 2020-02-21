@@ -44,7 +44,7 @@
   import IconStar from './icons/IconStar.vue';
 
   export default {
-    name: "ListRestaurants",
+    name: 'ListRestaurants',
     components: {
       CardRestaurant,
       IconStar

@@ -42,7 +42,7 @@
   import {eventBus} from "../main";
 
   export default {
-    name: "Reviews",
+    name: 'ReviewsRestaurant',
     components: {
       IconStar,
       Review

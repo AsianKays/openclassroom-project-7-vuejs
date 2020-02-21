@@ -20,7 +20,7 @@
   import IconStar from './icons/IconStar.vue';
 
   export default {
-    name: "Review",
+    name: 'Review',
     components: {
       IconStar
     },

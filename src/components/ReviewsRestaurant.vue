@@ -2,14 +2,24 @@
   <md-dialog id="dialog" :md-active.sync="showDialog" @md-closed="closeDialog">
     <md-dialog-title>Tous les avis sur « {{ restaurantName }} » </md-dialog-title>
     <md-divider></md-divider>
+
     <md-chip class="md-primary chips" md-clickable @click="showTextarea = !showTextarea">
       <md-icon>rate_review</md-icon>
       Rédiger un avis
     </md-chip>
 
     <transition name="slide-fade">
-      <div v-if="showTextarea">
-        <md-field class="textarea">
+      <div class="form" v-if="showTextarea">
+        <div style="display: flex;" class="clickable">
+          <div v-for="i in rate" :key="i" @click="rate = i">
+            <icon-star format="full" ></icon-star>
+          </div>
+
+          <div v-for="i in (5-rate)" :key="`${i}-empty`" @click="rate += i">
+            <icon-star format="empty"></icon-star>
+          </div>
+        </div>
+        <md-field>
           <label>Qu'avez vous penser de ce restaurant ?</label>
           <md-textarea v-model="textarea" md-counter="500"></md-textarea>
         </md-field>
@@ -27,11 +37,13 @@
 </template>
 
 <script>
+  import IconStar from './icons/IconStar.vue';
   import Review from './Review.vue';
 
   export default {
-    name: "test",
+    name: "Reviews",
     components: {
+      IconStar,
       Review
     },
     props: {
@@ -51,6 +63,7 @@
     data: () => ({
       showDialog: false,
       showTextarea: false,
+      rate: 1,
       textarea: null
     }),
     watch: {
@@ -92,7 +105,7 @@
     }
   }
 
-  .textarea {
+  .form {
     width: 95%;
     margin: 20px auto 10px;
   }
@@ -105,16 +118,15 @@
     color: #fff !important;
   }
 
-  /* Les animations d'entrée (« enter ») et de sortie (« leave »)  */
-  /* peuvent utiliser différentes fonctions de durée et de temps.  */
   .slide-fade-enter-active {
     transition: all .3s ease;
   }
+
   .slide-fade-leave-active {
     transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-  .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active below version 2.1.8 */ {
+
+  .slide-fade-enter, .slide-fade-leave-to {
     transform: translateX(10px);
     opacity: 0;
   }

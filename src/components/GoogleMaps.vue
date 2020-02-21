@@ -4,8 +4,7 @@
 
 <script>
   // https://stackoverflow.com/questions/6219383/google-maps-api-3-check-if-marker-is-in-view
-
-  let GoogleMapsLoader = require('google-maps');
+  const GoogleMapsLoader = require('google-maps');
   import { eventBus } from "../main";
 
   export default {
@@ -26,9 +25,7 @@
       /**
        * When created, it will initialize a Google map
        */
-
       await this.initGoogleMap();
-
       eventBus.$on('update-restaurants-displayed', (restaurantsDisplayed) => {
         this.hideAllMarkers();
         this.restaurants.forEach((restaurant, index) => {

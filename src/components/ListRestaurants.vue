@@ -39,7 +39,6 @@
 
 <script>
   // https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
-
   import CardRestaurant from './CardRestaurant.vue';
   import { eventBus } from "../main";
   import IconStar from './icons/IconStar.vue';
@@ -90,7 +89,6 @@
       })
     },
     methods: {
-
       /**
        * Function semi generic for filter an array which includes the string given in third parameter
        * This value is searched in the field, given in the second paramter, of the element
@@ -120,6 +118,7 @@
 
       /**
        * Update displayedRate to match with the current rate filter
+       * @param {Number} rate - Rate chosen to display
        */
       changeDisplayedRate(rate) {
         rate !== 0 ? this.displayedRate = `${rate}+` : this.displayedRate = 'Note';
@@ -131,15 +130,12 @@
        */
       setRateFilter(rate) {
         this.filteredRate = rate;
-
         const restaurantsFromRateFilter = this.restaurants.filter(restaurant => {
           let total = 0;
           const ratings = restaurant['ratings'];
-
           ratings.forEach(rate => {
             total = total + rate.stars;
           });
-
           const averageStars = Math.trunc((total/ratings.length));
           return averageStars >= rate;
         });

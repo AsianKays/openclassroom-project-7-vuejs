@@ -25,6 +25,7 @@
 <script>
   import IconStar from './icons/IconStar.vue';
   import ReviewsRestaurant from './ReviewsRestaurant.vue';
+  import { eventBus } from "../main";
 
   export default {
     name: 'CardRestaurant',
@@ -45,6 +46,9 @@
       image: '',
       state: false
     }),
+    created: function() {
+
+    },
     watch: {
       restaurant: {
         immediate: true,
@@ -54,6 +58,10 @@
       }
     },
     mounted: function() {
+      eventBus.$on('newReview' + this.restaurant.restaurantName, (newReview) => {
+        this.restaurant.ratings.push(newReview);
+        this.setRate()
+      })
       // this.image = 'https://maps.googleapis.com/maps/api/streetview?location='+this.restaurant.lat+','+this.restaurant.long+'&size=200x200&key='+process.env.VUE_APP_APIKEY
     },
     methods: {
@@ -62,7 +70,7 @@
        */
       setRate() {
         let total = 0;
-        const ratings = this.restaurant['ratings'];
+        const ratings = this.restaurant.ratings;
 
         ratings.forEach(rate => {
           total = total + rate.stars;

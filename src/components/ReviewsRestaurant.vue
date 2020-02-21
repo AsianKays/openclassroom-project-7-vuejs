@@ -39,6 +39,7 @@
 <script>
   import IconStar from './icons/IconStar.vue';
   import Review from './Review.vue';
+  import {eventBus} from "../main";
 
   export default {
     name: "Reviews",
@@ -89,14 +90,14 @@
           stars: this.rate,
           comment: this.reviewContent
         };
-        this.reviews.push(review);
+        eventBus.$emit('newReview' + this.restaurantName, review);
         this.resetInputs();
       },
 
       resetInputs() {
         this.stars = 1;
         this.reviewContent = '';
-        this.showTextarea = false;
+        this.showTextarea = !this.showTextarea;
       }
     }
   }

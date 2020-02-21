@@ -6,18 +6,18 @@ This is my first project with VueJS, I'm trying to explore all the possibilites 
 
 ## Installation
 
-```js
+```
 npm install
 ```
 
 ## Run server
 
-```js
+```
 npm run serve
 ```
 
 ## Settings environment variables
 
-```js
-VUE_APP_APIKEY=you_google_maps_api_key
+```
+VUE_APP_APIKEY=your_google_maps_api_key
 ```

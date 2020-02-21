@@ -49,7 +49,7 @@ body {
 }
 
 #listRestaurants {
-  width: 40%;
+  width: 30%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
-
 </style>

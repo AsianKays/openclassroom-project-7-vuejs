@@ -18,7 +18,7 @@
           </md-card-media>
         </md-card-header>
     </md-card>
-    <ReviewsRestaurant :state="state" :reviews="restaurant.ratings" @closed="updateStateReviews"></ReviewsRestaurant>
+    <ReviewsRestaurant :restaurantName="restaurant.restaurantName" :state="state" :reviews="restaurant.ratings" @closed="updateStateReviews"></ReviewsRestaurant>
   </div>
 </template>
 

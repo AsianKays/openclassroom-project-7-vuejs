@@ -3,7 +3,7 @@
     <md-dialog-title>Tous les avis sur « {{ restaurantName }} » </md-dialog-title>
     <md-divider></md-divider>
 
-    <md-chip class="md-primary chips" md-clickable @click="showTextarea = !showTextarea">
+    <md-chip class="md-primary chips" md-clickable @click="resetInputs()">
       <md-icon>rate_review</md-icon>
       Rédiger un avis
     </md-chip>
@@ -20,11 +20,11 @@
           </div>
         </div>
         <md-field>
-          <label>Qu'avez vous penser de ce restaurant ?</label>
-          <md-textarea v-model="textarea" md-counter="500"></md-textarea>
+          <label>Qu'avez-vous penser de ce restaurant ?</label>
+          <md-textarea v-model="reviewContent" md-counter="500"></md-textarea>
         </md-field>
-        <md-button class="md-raised md-primary button-textarea" id="button-send">Donner mon avis</md-button>
-        <md-button class="md-primary button-textarea" @click="showTextarea = !showTextarea">Annuler</md-button>
+        <md-button class="md-raised md-primary button-textarea" id="button-send" @click="addReview()">Donner mon avis</md-button>
+        <md-button class="md-primary button-textarea" @click="resetInputs()">Annuler</md-button>
       </div>
     </transition>
 
@@ -64,7 +64,7 @@
       showDialog: false,
       showTextarea: false,
       rate: 1,
-      textarea: null
+      reviewContent: null
     }),
     watch: {
       state: {
@@ -82,6 +82,21 @@
       closeDialog() {
         this.showDialog= false;
         this.$emit('closed', false);
+      },
+
+      addReview() {
+        const review = {
+          stars: this.rate,
+          comment: this.reviewContent
+        };
+        this.reviews.push(review);
+        this.resetInputs();
+      },
+
+      resetInputs() {
+        this.stars = 1;
+        this.reviewContent = '';
+        this.showTextarea = false;
       }
     }
   }

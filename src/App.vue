@@ -9,6 +9,7 @@
   import ListRestaurants from './components/ListRestaurants.vue';
   import GoogleMaps from './components/GoogleMaps.vue';
   import jsonRestaurants from './json/restaurants.json';
+  import { eventBus } from "./main";
 
   export default {
     name: 'app',
@@ -18,7 +19,12 @@
     },
     data: () => ({
       restaurants: jsonRestaurants,
-    })
+    }),
+    created: function() {
+      eventBus.$on('updateRestaurants', (updatedRestaurants) => {
+        this.restaurants = updatedRestaurants
+      });
+    }
   }
 </script>
 

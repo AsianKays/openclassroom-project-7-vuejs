@@ -38,6 +38,9 @@
       });
       eventBus.$on('check-markers-visibility', () => {
         this.emitMarkersVisible();
+      });
+      eventBus.$on('updateRestaurants', (updatedRestaurants) => {
+        this.restaurants = updatedRestaurants
       })
     },
     mounted() {

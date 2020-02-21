@@ -81,12 +81,15 @@
        * It will get an array _markersVisible with all markers visible from the map.
        */
       eventBus.$on('update-visible-markers', (_markersVisible) => {
-        let restaurantsVisible = [];
+        const restaurantsVisible = [];
         _markersVisible.forEach((index) => {
           restaurantsVisible.push(this.restaurants[index])
         });
         this.restaurantsDisplayed = restaurantsVisible;
-      })
+      });
+      eventBus.$on('updateRestaurants', (updatedRestaurants) => {
+        this.restaurants = updatedRestaurants
+      });
     },
     methods: {
       /**

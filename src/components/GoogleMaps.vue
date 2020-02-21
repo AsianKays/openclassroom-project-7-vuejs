@@ -55,7 +55,7 @@
        * create markers for every restaurants from prop restaurants
        */
       async initGoogleMap() {
-        // GoogleMapsLoader.KEY = 'my-key';
+        // GoogleMapsLoader.KEY = process.env.VUE_APP_APIKEY;
         GoogleMapsLoader.VERSION = '3.39';
         GoogleMapsLoader.REGION = 'fr';
         const userPosition = await this.getUserLocalisation();
@@ -68,6 +68,7 @@
           this.createAllRestaurantsMarkers();
           this.createMarker(userPosition, 'blue');
           this.listenerBounds(google);
+          this.listenerClick(google);
         })
       },
 
@@ -190,6 +191,24 @@
       listenerBounds(google) {
         google.maps.event.addListener(this.map, 'bounds_changed', () => {
           this.emitMarkersVisible();
+        });
+      },
+
+      /**
+       * Triggered if the user click on the map. It will open a dialog component to add new restaurant.
+       * @param {Object} google - Object which contains all Google properties and functions
+       */
+      listenerClick(google) {
+        let geocoder = google.maps.Geocoder;
+        console.log(geocoder);
+        google.maps.event.addListener(this.map, 'click', (e) => {
+          geocoder.prototype.geocode({
+            latLng: e.latLng
+          }, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK) {
+              if (results[0]) { console.log(results[0].formatted_address) }
+            }
+          })
         });
       }
     }

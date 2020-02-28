@@ -28,7 +28,7 @@
     created: function() {
       eventBus.$on('user-location', (userLocation) => {
         this.location = userLocation;
-        // this.getRestaurantsFromGooglePlacesApi();
+        this.getRestaurantsFromGooglePlacesApi();
       });
     },
     methods: {

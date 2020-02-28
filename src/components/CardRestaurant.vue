@@ -50,7 +50,7 @@
       restaurant: {
         immediate: true,
         handler() {
-          this.setRate()
+          this.setRate();
         }
       }
     },
@@ -75,6 +75,7 @@
           });
 
           this.averageRate = Math.trunc((total/ratings.length));
+          console.log(this.averageRate);
           const decimal = (total/ratings.length)%1;
 
           if (decimal !== 0) {

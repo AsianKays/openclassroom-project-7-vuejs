@@ -29,7 +29,7 @@
       </md-menu>
 
       <div v-for="(restaurant, index) in restaurantsDisplayed" :key="index">
-        <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
+        <CardRestaurant v-bind:restaurant=restaurant></CardRestaurant>
       </div>
     </div>
   </div>
@@ -84,7 +84,6 @@
           restaurantsVisible.push(this.restaurants[index])
         });
         this.restaurantsDisplayed = restaurantsVisible;
-        console.log(this.restaurantsDisplayed);
       });
       eventBus.$on('add-restaurant', (newRestaurant) => {
         this.restaurants.push(newRestaurant);

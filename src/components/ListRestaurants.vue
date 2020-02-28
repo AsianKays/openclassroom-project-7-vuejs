@@ -29,9 +29,7 @@
       </md-menu>
 
       <div v-for="(restaurant, index) in restaurantsDisplayed" :key="index">
-        <keep-alive>
-          <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
-        </keep-alive>
+        <CardRestaurant v-bind:restaurant.sync=restaurant></CardRestaurant>
       </div>
     </div>
   </div>
@@ -80,12 +78,13 @@
        * When created, it have to wait a trigger from GoogleMaps.vue.
        * It will get an array _markersVisible with all markers visible from the map.
        */
-      eventBus.$on('update-visible-markers', (_markersVisible) => {
+      eventBus.$on('update-visible-markers', (markersVisible) => {
         const restaurantsVisible = [];
-        _markersVisible.forEach((index) => {
+        markersVisible.forEach((index) => {
           restaurantsVisible.push(this.restaurants[index])
         });
         this.restaurantsDisplayed = restaurantsVisible;
+        console.log(this.restaurantsDisplayed);
       });
       eventBus.$on('add-restaurant', (newRestaurant) => {
         this.restaurants.push(newRestaurant);
@@ -95,7 +94,7 @@
     methods: {
       /**
        * Function semi generic for filter an array which includes the string given in third parameter
-       * This value is searched in the field, given in the second paramter, of the element
+       * This value is searched in the field, given in the second parameter, of the element
        * @param {Array} arrayToFilter - Array to filter
        * @param {String} field - Key of the object
        * @param {String} searchedValue - Value we are looking for
@@ -154,7 +153,7 @@
       },
 
       /**
-       * Function for the searchbar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
+       * Function for the search bar. Update the array restaurantsDisplayed depends on the value of searchRestaurant
        */
       logSearchedRestaurant() {
         if (this.searchedRestaurant !== '') {

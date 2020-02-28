@@ -71,7 +71,7 @@
        * create markers for every restaurants from prop restaurants
        */
       async initGoogleMap() {
-        GoogleMapsLoader.KEY = process.env.VUE_APP_APIKEY;
+        // GoogleMapsLoader.KEY = process.env.VUE_APP_APIKEY;
         GoogleMapsLoader.VERSION = '3.39';
         GoogleMapsLoader.REGION = 'fr';
         const userPosition = await this.getUserLocalisation();
@@ -101,6 +101,7 @@
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                   };
+                  eventBus.$emit('user-location', location);
                   resolve(location);
                 }
               )

@@ -9,6 +9,8 @@
   import ListRestaurants from './components/ListRestaurants.vue';
   import GoogleMaps from './components/GoogleMaps.vue';
   import jsonRestaurants from './json/restaurants.json';
+  import {eventBus} from "./main";
+  import axios from "axios";
 
   export default {
     name: 'app',
@@ -18,7 +20,52 @@
     },
     data: () => ({
       restaurants: jsonRestaurants,
-    })
+      proxyUrl: 'https://cors-anywhere.herokuapp.com/',
+      urlGooglePlacesApi: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?',
+      location: {},
+      radius: '5000'
+    }),
+    created: function() {
+      eventBus.$on('user-location', (userLocation) => {
+        this.location = userLocation;
+        // this.getRestaurantsFromGooglePlacesApi();
+      });
+    },
+    methods: {
+      /**
+       *
+       */
+      getRestaurantsFromGooglePlacesApi() {
+        const urlGooglePlacesApi = `${this.urlGooglePlacesApi}location=${this.location.lat},${this.location.lng}&radius=${this.radius}&key=${process.env.VUE_APP_APIKEY}&type=restaurant`;
+        axios.get(this.proxyUrl +urlGooglePlacesApi)
+            .then(response => {
+              if(response.status === 200) {
+                let restaurantsFromApi = response.data.results;
+                restaurantsFromApi = this.adaptFormat(restaurantsFromApi);
+                this.restaurants = this.restaurants.concat(restaurantsFromApi);
+              }
+            });
+      },
+
+      /**
+       *
+       * @param array
+       */
+      adaptFormat(array) {
+        let result = [];
+        array.forEach(element => {
+          const obj = {
+            restaurantName: element.name,
+            address: element.vicinity,
+            lat: element.geometry.location.lat,
+            long: element.geometry.location.lng,
+            ratings: []
+          };
+          result.push(obj);
+        });
+        return result;
+      }
+    }
   }
 </script>
 

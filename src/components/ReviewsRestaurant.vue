@@ -81,7 +81,7 @@
        * It will call the parent component and update the current state.
        */
       closeDialog() {
-        this.showDialog= false;
+        this.showDialog = false;
         this.$emit('closed', false);
       },
 

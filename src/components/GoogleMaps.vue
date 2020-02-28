@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%; width: 100%;">
     <div id="google-map"></div>
-    <FormRestaurant restaurantName="Test" address="test" state="true"></FormRestaurant>
+    <FormRestaurant :coords="coordsFromClick" :state="stateFormRestaurant"></FormRestaurant>
   </div>
 </template>
 
@@ -24,9 +24,11 @@
     },
     data: () => ({
       restaurantsDisplayed: [],
-      google: Object,
-      map: Object,
-      arrayMarkers: []
+      google: {},
+      map: {},
+      arrayMarkers: [],
+      coordsFromClick: {},
+      stateFormRestaurant: false
     }),
     created: async function() {
       /**
@@ -46,9 +48,16 @@
       eventBus.$on('check-markers-visibility', () => {
         this.emitMarkersVisible();
       });
-      eventBus.$on('updateRestaurants', (updatedRestaurants) => {
-        this.restaurants = updatedRestaurants
-      })
+      eventBus.$on('close-form-restaurant', () => {
+        this.stateFormRestaurant = false;
+      });
+      eventBus.$on('add-restaurant', (newRestaurant) => {
+        const position = {
+          lat: newRestaurant.lat,
+          lng: newRestaurant.long
+        };
+        this.createMarker(position, 'yellow');
+      });
     },
     mounted() {
       /**
@@ -62,7 +71,7 @@
        * create markers for every restaurants from prop restaurants
        */
       async initGoogleMap() {
-        // GoogleMapsLoader.KEY = process.env.VUE_APP_APIKEY;
+        GoogleMapsLoader.KEY = process.env.VUE_APP_APIKEY;
         GoogleMapsLoader.VERSION = '3.39';
         GoogleMapsLoader.REGION = 'fr';
         const userPosition = await this.getUserLocalisation();
@@ -125,7 +134,7 @@
             }
           }
         );
-        if (color === 'red') {
+        if (color === 'red' || color === 'yellow') {
           this.arrayMarkers.push(marker);
         }
       },
@@ -212,7 +221,16 @@
             latLng: e.latLng
           }, (results, status) => {
             if (status === google.maps.GeocoderStatus.OK) {
-              if (results[0]) { console.log(results[0].formatted_address); }
+              if (results[0]) {
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                this.coordsFromClick = {
+                  address: results[0].formatted_address,
+                  lat,
+                  lng,
+                };
+                this.stateFormRestaurant = true;
+              }
             }
           })
         });

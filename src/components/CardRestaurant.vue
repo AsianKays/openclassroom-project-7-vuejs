@@ -46,9 +46,6 @@
       image: '',
       state: false
     }),
-    created: function() {
-
-    },
     watch: {
       restaurant: {
         immediate: true,
@@ -62,7 +59,7 @@
         this.restaurant.ratings.push(newReview);
         this.setRate()
       })
-      // this.image = 'https://maps.googleapis.com/maps/api/streetview?location='+this.restaurant.lat+','+this.restaurant.long+'&size=200x200&key='+process.env.VUE_APP_APIKEY
+      this.image = 'https://maps.googleapis.com/maps/api/streetview?location='+this.restaurant.lat+','+this.restaurant.long+'&size=200x200&key='+process.env.VUE_APP_APIKEY
     },
     methods: {
       /**
@@ -72,16 +69,18 @@
         let total = 0;
         const ratings = this.restaurant.ratings;
 
-        ratings.forEach(rate => {
-          total = total + rate.stars;
-        });
+        if (ratings.length > 0) {
+          ratings.forEach(rate => {
+            total = total + rate.stars;
+          });
 
-        this.averageRate = Math.trunc((total/ratings.length));
-        const decimal = (total/ratings.length)%1;
+          this.averageRate = Math.trunc((total/ratings.length));
+          const decimal = (total/ratings.length)%1;
 
-        if (decimal !== 0) {
-          this.isHalf = true;
-          this.averageRateDecimal = decimal * 10;
+          if (decimal !== 0) {
+            this.isHalf = true;
+            this.averageRateDecimal = decimal * 10;
+          }
         }
       },
 

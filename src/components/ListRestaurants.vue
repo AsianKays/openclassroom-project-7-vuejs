@@ -1,5 +1,5 @@
 <template>
-  <div class="md-layout">
+  <div class="md-layout" style="overflow-y: auto">
     <div class="md-layout-item">
       <h1>Geeglo Places</h1>
       <md-divider></md-divider>
@@ -87,8 +87,9 @@
         });
         this.restaurantsDisplayed = restaurantsVisible;
       });
-      eventBus.$on('updateRestaurants', (updatedRestaurants) => {
-        this.restaurants = updatedRestaurants
+      eventBus.$on('add-restaurant', (newRestaurant) => {
+        this.restaurants.push(newRestaurant);
+        this.restaurantsDisplayed.push(newRestaurant);
       });
     },
     methods: {

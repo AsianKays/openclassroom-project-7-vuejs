@@ -1,8 +1,15 @@
 <template>
-  <div class="md-layout" style="overflow-y: auto">
+  <section class="md-layout" style="overflow-y: auto">
     <div class="md-layout-item">
-      <h1>Geeglo Places</h1>
+      <header>
+        <h1>Geeglo Places</h1>
+        <p>
+          <small>Trouvez le restaurant qui vous correspond !</small>
+        </p>
+      </header>
+
       <md-divider></md-divider>
+
       <md-field>
         <label>Rechercher un restaurant</label>
         <md-input v-model="searchedRestaurant" @input=logSearchedRestaurant></md-input>
@@ -15,10 +22,10 @@
         </md-chip>
 
         <md-menu-content>
-          <md-menu-item @click="setRateFilter(0)" >
-            <div>
+          <md-menu-item @click="setRateFilter(0)">
+            <p>
               Toutes les notes
-            </div>
+            </p>
           </md-menu-item>
           <md-menu-item @click="setRateFilter(item.nbStars.length)" v-for="(item, index) in starsForFilterOptions" :key="index">
             <div>
@@ -32,11 +39,10 @@
         <CardRestaurant v-bind:restaurant=restaurant></CardRestaurant>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
-  // https://medium.com/devmarketer/how-to-add-conditional-statements-to-v-for-loops-in-vue-js-c0b4d17e7dfd
   import CardRestaurant from './CardRestaurant.vue';
   import { eventBus } from "../main";
   import IconStar from './icons/IconStar.vue';
@@ -76,7 +82,7 @@
     created: function() {
       /**
        * When created, it have to wait a trigger from GoogleMaps.vue.
-       * It will get an array _markersVisible with all markers visible from the map.
+       * It will get an array markersVisible with all markers visible from the map.
        */
       eventBus.$on('update-visible-markers', (markersVisible) => {
         const restaurantsVisible = [];

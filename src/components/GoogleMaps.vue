@@ -1,12 +1,11 @@
 <template>
-  <div style="height: 100%; width: 100%;">
+  <section style="height: 100%; width: 100%;">
     <div id="google-map"></div>
     <FormRestaurant :coords="coordsFromClick" :state="stateFormRestaurant"></FormRestaurant>
-  </div>
+  </section>
 </template>
 
 <script>
-  // https://stackoverflow.com/questions/6219383/google-maps-api-3-check-if-marker-is-in-view
   const GoogleMapsLoader = require('google-maps');
   import { eventBus } from "../main";
   import FormRestaurant from "./FormRestaurant";
@@ -74,18 +73,21 @@
         GoogleMapsLoader.KEY = process.env.VUE_APP_APIKEY;
         GoogleMapsLoader.VERSION = '3.39';
         GoogleMapsLoader.REGION = 'fr';
-        const userPosition = await this.getUserLocalisation();
-        GoogleMapsLoader.load((google) => {
-          this.google = google;
-          this.map = new google.maps.Map(document.getElementById('google-map'), {
-            zoom: 12,
-            center: userPosition
-          });
-          this.createAllRestaurantsMarkers();
-          this.createMarker(userPosition, 'blue');
-          this.listenerBounds(google);
-          this.listenerClick(google);
-        })
+        const userPosition = await this.getUserLocalisation()
+            .catch(() => alert('Vous devez autoriser la géolocalisation pour utiliser cette application !'));
+        if (userPosition) {
+          GoogleMapsLoader.load((google) => {
+            this.google = google;
+            this.map = new google.maps.Map(document.getElementById('google-map'), {
+              zoom: 12,
+              center: userPosition
+            });
+            this.createAllRestaurantsMarkers();
+            this.createMarker(userPosition, 'blue');
+            this.listenerBounds(google);
+            this.listenerClick(google);
+          })
+        }
       },
 
       /**
@@ -93,18 +95,23 @@
        */
       getUserLocalisation() {
         return new Promise(
-          (resolve) => {
+          (resolve, reject) => {
             if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(
-                position => {
+                (position) => {
                   const location = {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                   };
                   eventBus.$emit('user-location', location);
                   resolve(location);
-                }
+                },
+                  (error) => {
+                    reject(error);
+                  }
               )
+            } else {
+              alert('Erreur inconnue. Vérifiez que votre appareil possède une fonctionnalité de géolocalisation.')
             }
           }
         )

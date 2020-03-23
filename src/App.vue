@@ -33,7 +33,7 @@
     },
     methods: {
       /**
-       *
+       * Triggered when app is starting. It will get existing restaurants from Google Places API.
        */
       getRestaurantsFromGooglePlacesApi() {
         const urlGooglePlacesApi = `${this.urlGooglePlacesApi}location=${this.location.lat},${this.location.lng}&radius=${this.radius}&key=${process.env.VUE_APP_APIKEY}&type=restaurant`;
@@ -44,11 +44,14 @@
                 restaurantsFromApi = this.adaptFormat(restaurantsFromApi);
                 this.restaurants = this.restaurants.concat(restaurantsFromApi);
               }
+            }).catch(error => {
+              console.error(error)
             });
       },
 
       /**
-       *
+       * Transform data from an existing array get from Google Places API to a new structure which will match
+       * with the local JSON
        * @param array
        */
       adaptFormat(array) {

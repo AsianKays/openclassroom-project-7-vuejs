@@ -1,19 +1,21 @@
 <template>
-  <md-list class="md-triple-line">
-    <md-list-item>
-      <md-avatar>
-        <img src="https://image.flaticon.com/icons/svg/147/147144.svg" alt="avatar">
-      </md-avatar>
+  <article>
+    <md-list class="md-triple-line">
+      <md-list-item>
+        <md-avatar>
+          <img src="https://image.flaticon.com/icons/svg/147/147144.svg" alt="avatar">
+        </md-avatar>
 
-      <div class="md-list-item-text">
-        <span>Utilisateur anonyme</span>
-        <div>
-          <icon-star v-for="i in review.stars" :key="i"></icon-star>
+        <div class="md-list-item-text">
+          <span>Utilisateur anonyme</span>
+          <div>
+            <icon-star v-for="i in review.stars" :key="i"></icon-star>
+          </div>
+          <p>{{ review.comment }}</p>
         </div>
-        <p>{{ review.comment }}</p>
-      </div>
-    </md-list-item>
-  </md-list>
+      </md-list-item>
+    </md-list>
+  </article>
 </template>
 
 <script>

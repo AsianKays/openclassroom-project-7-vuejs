@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <form>
     <md-dialog :md-active.sync="showDialog" @md-closed="closeDialog" id="dialog-FormRestaurant">
       <md-dialog-title>
         <md-icon>restaurant_menu</md-icon>
@@ -24,7 +24,7 @@
         <md-button class="md-primary md-raised" id="button-add" @click="addRestaurant">Ajouter</md-button>
       </md-dialog-actions>
     </md-dialog>
-  </div>
+  </form>
 </template>
 
 <script>

@@ -1,14 +1,14 @@
 <template>
-  <div class="hover" @click="updateStateReviews(true)">
+  <article class="hover" @click="updateStateReviews(true)">
     <md-card class="md-primary" md-theme="black-card">
       <md-card-header>
         <md-card-header-text>
-          <div class="md-title">
+          <h1 class="md-title">
             {{ restaurant.restaurantName }}
-          </div>
-          <div class="md-subhead">
+          </h1>
+          <address class="md-subhead">
             {{ restaurant.address }}
-          </div>
+          </address>
           <icon-star v-for="i in averageRate" :key="i"></icon-star>
           <icon-star v-if="isHalf" format="half"></icon-star>
         </md-card-header-text>
@@ -19,7 +19,7 @@
       </md-card-header>
     </md-card>
     <ReviewsRestaurant :restaurantName="restaurant.restaurantName" :state="state" :reviews="restaurant.ratings" @closed="updateStateReviews"></ReviewsRestaurant>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -75,7 +75,6 @@
           });
 
           this.averageRate = Math.trunc((total/ratings.length));
-          console.log(this.averageRate);
           const decimal = (total/ratings.length)%1;
 
           if (decimal !== 0) {
